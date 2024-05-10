@@ -38,20 +38,21 @@ class MainApp extends StatelessWidget {
   }
 }
 
-/// Determine the current position of the device.
+
+/// Xác định vị trí hiện tại của thiết bị.
 ///
-/// When the location services are not enabled or permissions
-/// are denied the `Future` will return an error.
+/// Khi dịch vụ định vị không được bật hoặc không có quyền
+/// Future bị từ chốisẽ trả về lỗi.
 Future<Position> _determinePosition() async {
   bool serviceEnabled;
   LocationPermission permission;
 
-  // Test if location services are enabled.
+// Kiểm tra xem định vị có được bật hay không.
   serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
-    // Location services are not enabled don't continue
-    // accessing the position and request users of the 
-    // App to enable the location services.
+// định vị không được kích hoạt, không tiếp tục
+    // truy cập vị trí và yêu cầu người dùng
+    //  kích hoạt định vị.
     return Future.error('Location services are disabled.');
   }
 
@@ -59,22 +60,19 @@ Future<Position> _determinePosition() async {
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied) {
-      // Permissions are denied, next time you could try
-      // requesting permissions again (this is also where
-      // Android's shouldShowRequestPermissionRationale 
-      // returned true. According to Android guidelines
-      // your App should show an explanatory UI now.
+     // bị từ chối,   thử lại
+      // yêu cầu lại quyền 
+      // Ứng dụng  sẽ hiển thị giao diện người dùng.
       return Future.error('Location permissions are denied');
     }
   }
   
   if (permission == LocationPermission.deniedForever) {
-    // Permissions are denied forever, handle appropriately. 
+    // Quyền bị từ chối vĩnh viễn
     return Future.error(
       'Location permissions are permanently denied, we cannot request permissions.');
   } 
-
-  // When we reach here, permissions are granted and we can
-  // continue accessing the position of the device.
+  //oke
+  // tiếp tục truy cập vị trí của thiết bị.
   return await Geolocator.getCurrentPosition();
 }
